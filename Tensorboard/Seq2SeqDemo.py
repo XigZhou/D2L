@@ -9,7 +9,7 @@ from torch.utils.tensorboard import SummaryWriter
 """
 运行这段代码
 打开annaconda 的cmd 输入下面的命令就可以看到网络图
-tensorboard --logdir=C:\\Users\\50588\\.conda\\envs\\pythonProject\\D2L\\TensorBoard\\logs
+tensorboard --logdir=C:\\Users\\50588\\.conda\\envs\\pythonProject\\D2L\\TensorBoard\\logs --port=6007
 详细debug：价值其实就在于怎么理解把contxt+input
 http://localhost:8888/notebooks/Python/Demo/Sequence2SequenceDemo.ipynb
 """
@@ -69,7 +69,7 @@ class Seq2SeqDecoder(d2l.Decoder):
 
 def show_network_framework():
     encoder = Seq2SeqEncoder(vocab_size=10, embed_size=8, num_hiddens=16,
-                             num_layers=2)
+                             num_layers=1)
     # encoder.eval()
     X = torch.zeros((4, 7), dtype=torch.long)
 
@@ -80,18 +80,18 @@ def show_network_framework():
     #
     #
     #
-    # writer = SummaryWriter("./encoder")
-    # writer.add_graph(encoder, X)
-    # writer.close()
-
-    decoder = Seq2SeqDecoder(vocab_size=10, embed_size=8, num_hiddens=16,
-                             num_layers=2)
-    decoder.eval()
-    state = decoder.init_state(encoder(X))
-
-    writer = SummaryWriter("./decoder")
-    writer.add_graph(decoder, encoder(X))
+    writer = SummaryWriter("./encoder2")
+    writer.add_graph(encoder, X)
     writer.close()
+
+    # decoder = Seq2SeqDecoder(vocab_size=10, embed_size=8, num_hiddens=16,
+    #                          num_layers=2)
+    # decoder.eval()
+    # state = decoder.init_state(encoder(X))
+    #
+    # writer = SummaryWriter("./decoder")
+    # writer.add_graph(decoder, encoder(X))
+    # writer.close()
 
 
 #@save
@@ -135,7 +135,7 @@ def train_seq2seq(net, data_iter, lr, num_epochs, tgt_vocab, device):
         f'tokens/sec on {str(device)}')
 
 def train():
-    embed_size, num_hiddens, num_layers, dropout = 32, 32, 2, 0.1
+    embed_size, num_hiddens, num_layers, dropout = 32, 32, 4, 0.1
     batch_size, num_steps = 64, 10
     lr, num_epochs, device = 0.005, 300, d2l.try_gpu()
 
