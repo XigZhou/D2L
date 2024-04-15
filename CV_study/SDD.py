@@ -1,4 +1,4 @@
-SDD.py# %matplotlib inline
+
 import torch
 import torchvision
 from torch import nn

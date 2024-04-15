@@ -4,12 +4,14 @@ import torch
 from d2l.torch import MaskedSoftmaxCELoss
 from torch import nn
 from d2l import torch as d2l
+import matplotlib.pyplot as plt
 from torch.utils.tensorboard import SummaryWriter
 """
 运行这段代码
 打开annaconda 的cmd 输入下面的命令就可以看到网络图
 tensorboard --logdir=C:\\Users\\50588\\.conda\\envs\\pythonProject\\D2L\\TensorBoard\\logs
-
+详细debug：价值其实就在于怎么理解把contxt+input
+http://localhost:8888/notebooks/Python/Demo/Sequence2SequenceDemo.ipynb
 """
 #@save
 class Seq2SeqEncoder(d2l.Encoder):
@@ -65,18 +67,20 @@ class Seq2SeqDecoder(d2l.Decoder):
         return output, state
 
 
-def dehug_test():
+def show_network_framework():
     encoder = Seq2SeqEncoder(vocab_size=10, embed_size=8, num_hiddens=16,
                              num_layers=2)
-    encoder.eval()
+    # encoder.eval()
     X = torch.zeros((4, 7), dtype=torch.long)
-    output, state = encoder(X)
+
+    output,state = encoder(X)
+
     # print(output.shape)
     # print(state.shape)
     #
     #
     #
-    # writer = SummaryWriter("./logs2")
+    # writer = SummaryWriter("./encoder")
     # writer.add_graph(encoder, X)
     # writer.close()
 
@@ -84,8 +88,11 @@ def dehug_test():
                              num_layers=2)
     decoder.eval()
     state = decoder.init_state(encoder(X))
-    output, state = decoder(X, state)
-    # output.shape, state.shape
+
+    writer = SummaryWriter("./decoder")
+    writer.add_graph(decoder, encoder(X))
+    writer.close()
+
 
 #@save
 def train_seq2seq(net, data_iter, lr, num_epochs, tgt_vocab, device):
@@ -149,6 +156,8 @@ def train():
             net, eng, src_vocab, tgt_vocab, num_steps, device)
         print(f'{eng} => {translation}, bleu {bleu(translation, fra, k=2):.3f}')
 
+    plt.show()
+
 
 #@save
 def predict_seq2seq(net, src_sentence, src_vocab, tgt_vocab, num_steps,
@@ -204,3 +213,4 @@ def bleu(pred_seq, label_seq, k):  #@save
 
 if __name__ == '__main__':
     train()
+    # show_network_framework()
