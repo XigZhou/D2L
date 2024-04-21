@@ -43,7 +43,7 @@ class AdditiveAttention(nn.Module):
         # key的形状：(batch_size，1，“键－值”对的个数，num_hiddens)
         # 使用广播方式进行求和
 
-        # queries = torch.Size([2, 1, 8])
+        # queries = torch.Size([2, 1, 8])[
         # keys = torch.Size([2, 10, 8])
         # queries.unsqueeze(2) = torch.Size([2, 1, 1, 8])
         # keys.unsqueeze(1) = torch.Size([2, 1, 10, 8])
